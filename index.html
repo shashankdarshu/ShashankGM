@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Shashank G M — Procurement Professional</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#050810;--bg2:#0a0e1a;--bg3:#0f1525;
+  --blue:#00c8ff;--blue2:#0088cc;--blue-glow:rgba(0,200,255,0.15);
+  --teal:#00ffcc;--white:#eef4ff;--muted:#6b7a9a;
+  --border:rgba(0,200,255,0.18);--card:rgba(10,14,26,0.9);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:'Outfit',sans-serif;font-weight:300;overflow-x:hidden;cursor:none}
+
+/* CUSTOM CURSOR */
+.cursor{position:fixed;width:12px;height:12px;background:var(--blue);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform 0.1s,background 0.2s;mix-blend-mode:screen}
+.cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(0,200,255,0.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all 0.12s ease;mix-blend-mode:screen}
+
+/* CANVAS BG */
+#particleCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.5}
+
+/* SCROLL PROGRESS */
+.scroll-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--teal));z-index:200;width:0%;transition:width 0.08s;box-shadow:0 0 10px var(--blue)}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.2rem 5rem;background:rgba(5,8,16,0.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;background:linear-gradient(135deg,var(--blue),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:2rem;align-items:center}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.82rem;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.3s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--blue);transition:width 0.3s}
+.nav-links a:hover{color:var(--blue)}
+.nav-links a:hover::after{width:100%}
+.nav-whatsapp{background:linear-gradient(135deg,#25d366,#128c7e);color:#fff!important;padding:0.45rem 1.2rem;border-radius:50px;font-size:0.78rem!important;display:flex;align-items:center;gap:0.4rem;transition:transform 0.2s,box-shadow 0.2s!important}
+.nav-whatsapp:hover{transform:translateY(-2px)!important;box-shadow:0 4px 20px rgba(37,211,102,0.4)!important}
+.nav-whatsapp::after{display:none!important}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;padding:8rem 5rem 4rem;position:relative;z-index:1}
+.hero-content{max-width:700px}
+.hero-badge{display:inline-flex;align-items:center;gap:0.6rem;background:rgba(0,200,255,0.08);border:1px solid var(--border);padding:0.4rem 1rem;border-radius:50px;font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--blue);margin-bottom:2rem;animation:fadeUp 0.8s ease both}
+.hero-badge::before{content:'';width:6px;height:6px;background:var(--teal);border-radius:50%;animation:pulse 2s infinite}
+.hero h1{font-family:'Syne',sans-serif;font-size:clamp(3.5rem,8vw,7rem);font-weight:800;line-height:1;letter-spacing:-0.02em;animation:fadeUp 0.8s 0.1s ease both}
+.hero h1 .gradient{background:linear-gradient(135deg,var(--blue),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-typed{font-family:'Syne',sans-serif;font-size:clamp(1.2rem,3vw,2rem);font-weight:600;color:var(--muted);margin-top:0.5rem;animation:fadeUp 0.8s 0.2s ease both;min-height:2.4rem}
+.hero-typed .typed-text{color:var(--blue)}
+.hero-typed .cursor-blink{animation:blink 1s infinite;color:var(--teal)}
+.hero-desc{margin-top:1.5rem;font-size:1rem;color:#8090b0;max-width:500px;line-height:1.8;animation:fadeUp 0.8s 0.3s ease both}
+.hero-actions{margin-top:2.5rem;display:flex;gap:1rem;flex-wrap:wrap;animation:fadeUp 0.8s 0.4s ease both}
+.btn-glow{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#050810;padding:0.85rem 2rem;border-radius:8px;font-family:'Outfit',sans-serif;font-size:0.85rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;border:none;cursor:pointer;transition:all 0.3s;box-shadow:0 0 30px rgba(0,200,255,0.3)}
+.btn-glow:hover{transform:translateY(-3px);box-shadow:0 0 50px rgba(0,200,255,0.5)}
+.btn-ghost{background:transparent;color:var(--blue);padding:0.85rem 2rem;border-radius:8px;font-size:0.85rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;border:1px solid var(--border);transition:all 0.3s}
+.btn-ghost:hover{background:var(--blue-glow);border-color:var(--blue);transform:translateY(-3px)}
+.hero-photo{position:absolute;right:8%;top:50%;transform:translateY(-50%);animation:fadeUp 0.8s 0.5s ease both;z-index:2}
+.photo-frame{width:280px;height:280px;position:relative}
+.photo-frame .ring{position:absolute;inset:-12px;border-radius:50%;border:2px solid transparent;background:linear-gradient(135deg,var(--blue),var(--teal)) border-box;-webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);-webkit-mask-composite:destination-out;mask-composite:exclude;animation:spin 8s linear infinite}
+.photo-frame .ring2{position:absolute;inset:-24px;border-radius:50%;border:1px solid rgba(0,200,255,0.2);animation:spin 12s linear infinite reverse}
+.photo-inner{width:280px;height:280px;border-radius:50%;overflow:hidden;background:linear-gradient(135deg,var(--bg3),var(--bg2));border:3px solid rgba(0,200,255,0.3);display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer}
+.photo-inner img{width:100%;height:100%;object-fit:cover;display:none}
+.photo-placeholder{display:flex;flex-direction:column;align-items:center;gap:0.5rem;text-align:center;padding:1rem}
+.photo-placeholder svg{width:60px;height:60px;color:var(--muted)}
+.photo-placeholder p{font-size:0.75rem;color:var(--muted);letter-spacing:0.05em}
+.photo-placeholder span{font-size:0.65rem;color:rgba(0,200,255,0.6);border:1px solid var(--border);padding:0.25rem 0.6rem;border-radius:50px;margin-top:0.2rem}
+.photo-dots{position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);display:flex;gap:6px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--blue);opacity:0.3}
+.dot:nth-child(2){opacity:0.6;background:var(--teal)}
+.dot:nth-child(3){opacity:1;animation:pulse 2s infinite}
+#photoUpload{display:none}
+
+/* STATS */
+.stats{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,1fr);background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.stat-item{padding:2.5rem 2rem;border-right:1px solid var(--border);text-align:center;transition:background 0.3s}
+.stat-item:last-child{border-right:none}
+.stat-item:hover{background:var(--blue-glow)}
+.stat-num{font-family:'Syne',sans-serif;font-size:2.8rem;font-weight:800;background:linear-gradient(135deg,var(--blue),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+.stat-label{font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-top:0.4rem}
+
+/* SECTIONS */
+section{padding:7rem 5rem;position:relative;z-index:1}
+.section-eyebrow{font-size:0.72rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--blue);display:flex;align-items:center;gap:0.8rem;margin-bottom:1rem}
+.section-eyebrow::before{content:'';width:30px;height:1px;background:var(--blue)}
+.section-title{font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:800;line-height:1.1}
+.section-title span{background:linear-gradient(135deg,var(--blue),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 380px;gap:5rem;margin-top:4rem;align-items:start}
+.about-text p{color:#8090b0;font-size:1.02rem;line-height:1.9;margin-bottom:1.5rem}
+.about-text strong{color:var(--blue);font-weight:500}
+.skills-panel{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem;position:sticky;top:100px}
+.skills-panel h3{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue);margin-bottom:1.5rem}
+.skill-bar-item{margin-bottom:1.4rem}
+.skill-bar-top{display:flex;justify-content:space-between;margin-bottom:0.5rem;font-size:0.82rem}
+.skill-bar-name{color:var(--white)}
+.skill-bar-pct{color:var(--blue)}
+.skill-bar-track{height:5px;background:rgba(255,255,255,0.06);border-radius:50px;overflow:hidden}
+.skill-bar-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));border-radius:50px;width:0%;transition:width 1.2s cubic-bezier(0.4,0,0.2,1)}
+
+/* EXPERIENCE */
+#experience{background:var(--bg2)}
+.exp-list{margin-top:4rem;display:flex;flex-direction:column;gap:2rem}
+.exp-card{background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:2.5rem;position:relative;overflow:hidden;transition:all 0.4s;transform:translateY(30px);opacity:0}
+.exp-card.visible{transform:translateY(0);opacity:1}
+.exp-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--teal));transform:scaleX(0);transform-origin:left;transition:transform 0.4s}
+.exp-card:hover::before{transform:scaleX(1)}
+.exp-card:hover{border-color:rgba(0,200,255,0.4);box-shadow:0 20px 60px rgba(0,200,255,0.08);transform:translateY(-4px)}
+.exp-card-header{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1.5rem;margin-bottom:2rem}
+.exp-company-info{display:flex;align-items:center;gap:1.2rem}
+.company-logo{width:52px;height:52px;border-radius:12px;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(255,255,255,0.1)}
+.company-logo img{width:100%;height:100%;object-fit:contain;padding:4px}
+.exp-company{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:700;color:var(--white)}
+.exp-role{font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue);margin-top:0.2rem}
+.exp-period{font-size:0.78rem;color:var(--muted);background:rgba(0,200,255,0.08);border:1px solid var(--border);padding:0.4rem 1rem;border-radius:50px;white-space:nowrap}
+.exp-tags{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.5rem}
+.exp-tag{font-size:0.72rem;padding:0.25rem 0.7rem;background:rgba(0,200,255,0.08);border:1px solid var(--border);border-radius:50px;color:var(--blue);letter-spacing:0.05em}
+.exp-bullets{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:0.5rem}
+.exp-bullets li{font-size:0.88rem;color:#7080a0;padding:0.6rem 0.8rem;background:rgba(255,255,255,0.02);border-radius:8px;border-left:2px solid rgba(0,200,255,0.3);line-height:1.5;transition:all 0.2s}
+.exp-bullets li:hover{background:var(--blue-glow);border-left-color:var(--blue);color:var(--white)}
+.exp-bullets li strong{color:var(--white);font-weight:500;display:block;font-size:0.8rem;margin-bottom:0.2rem}
+
+/* AWARDS */
+.awards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.2rem;margin-top:4rem}
+.award-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.8rem;transition:all 0.3s;transform:translateY(20px);opacity:0;cursor:default;position:relative;overflow:hidden}
+.award-card::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(0,200,255,0.06),transparent 70%);opacity:0;transition:opacity 0.3s}
+.award-card:hover::after{opacity:1}
+.award-card.visible{transform:translateY(0);opacity:1}
+.award-card:hover{border-color:rgba(0,200,255,0.5);transform:translateY(-6px) scale(1.01);box-shadow:0 20px 40px rgba(0,200,255,0.1)}
+.award-emoji{font-size:2.2rem;margin-bottom:1rem;display:block}
+.award-company{font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--blue);margin-bottom:0.4rem}
+.award-name{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--white);line-height:1.3}
+
+/* SKILLS SECTION */
+#skills{background:var(--bg2)}
+.skills-showcase{margin-top:4rem;display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
+.skill-cat{background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:2rem;transition:all 0.3s}
+.skill-cat:hover{border-color:rgba(0,200,255,0.4);box-shadow:0 10px 40px rgba(0,200,255,0.06)}
+.skill-cat-icon{font-size:2rem;margin-bottom:1rem}
+.skill-cat-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--blue);margin-bottom:1.2rem}
+.skill-pills{display:flex;flex-wrap:wrap;gap:0.5rem}
+.skill-pill{font-size:0.78rem;padding:0.35rem 0.85rem;background:rgba(0,200,255,0.06);border:1px solid var(--border);border-radius:50px;color:#90a0c0;transition:all 0.2s}
+.skill-pill:hover{background:var(--blue-glow);border-color:var(--blue);color:var(--blue)}
+
+/* EDUCATION */
+.edu-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:3rem;display:flex;gap:2.5rem;align-items:center;max-width:700px;margin-top:4rem;transition:all 0.3s}
+.edu-card:hover{border-color:rgba(0,200,255,0.4);box-shadow:0 20px 60px rgba(0,200,255,0.08)}
+.edu-icon-wrap{width:80px;height:80px;background:linear-gradient(135deg,var(--blue),var(--teal));border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;flex-shrink:0}
+.edu-degree{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:700;margin-bottom:0.4rem}
+.edu-school{color:var(--blue);font-size:0.9rem;margin-bottom:0.4rem}
+.edu-year{color:var(--muted);font-size:0.8rem;letter-spacing:0.1em}
+.edu-langs{display:flex;gap:0.5rem;margin-top:1rem;flex-wrap:wrap}
+.edu-lang{font-size:0.72rem;padding:0.25rem 0.7rem;border:1px solid var(--border);border-radius:50px;color:var(--muted)}
+
+/* CONTACT */
+#contact{background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%)}
+.contact-wrapper{margin-top:4rem;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start}
+.contact-headline{font-family:'Syne',sans-serif;font-size:clamp(1.4rem,3vw,2.2rem);font-weight:700;line-height:1.4;color:#c0d0e8;margin-bottom:1.5rem}
+.contact-headline em{font-style:normal;background:linear-gradient(135deg,var(--blue),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.contact-cards{display:flex;flex-direction:column;gap:1rem}
+.contact-card{display:flex;align-items:center;gap:1.2rem;padding:1.4rem 1.8rem;background:var(--bg2);border:1px solid var(--border);border-radius:12px;text-decoration:none;transition:all 0.3s;position:relative;overflow:hidden}
+.contact-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--blue),var(--teal));transform:scaleY(0);transition:transform 0.3s;border-radius:0 2px 2px 0}
+.contact-card:hover::before{transform:scaleY(1)}
+.contact-card:hover{border-color:rgba(0,200,255,0.4);background:rgba(0,200,255,0.04);transform:translateX(6px)}
+.cc-icon{width:44px;height:44px;border-radius:10px;background:var(--blue-glow);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.cc-label{font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted)}
+.cc-value{font-size:0.9rem;color:var(--white);margin-top:0.15rem}
+.whatsapp-card{background:linear-gradient(135deg,rgba(37,211,102,0.1),rgba(18,140,126,0.1));border-color:rgba(37,211,102,0.3)}
+.whatsapp-card .cc-icon{background:rgba(37,211,102,0.15);border-color:rgba(37,211,102,0.3)}
+.whatsapp-card:hover{border-color:rgba(37,211,102,0.6);background:rgba(37,211,102,0.08)}
+.whatsapp-card::before{background:linear-gradient(180deg,#25d366,#128c7e)}
+
+/* FLOATING WHATSAPP */
+.float-wa{position:fixed;bottom:2rem;right:2rem;z-index:500;display:flex;flex-direction:column;align-items:center;gap:0.5rem}
+.float-wa-btn{width:60px;height:60px;background:linear-gradient(135deg,#25d366,#128c7e);border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 4px 20px rgba(37,211,102,0.5);animation:floatWa 3s ease-in-out infinite;transition:transform 0.2s}
+.float-wa-btn:hover{transform:scale(1.1)}
+.float-wa-btn svg{width:28px;height:28px;fill:#fff}
+.float-wa-pulse{position:absolute;width:60px;height:60px;border-radius:50%;background:rgba(37,211,102,0.4);animation:waPulse 2s ease-out infinite}
+.float-wa-label{background:rgba(5,8,16,0.9);border:1px solid var(--border);font-size:0.7rem;color:var(--white);padding:0.3rem 0.7rem;border-radius:50px;white-space:nowrap;letter-spacing:0.05em}
+
+/* FOOTER */
+footer{background:var(--bg);border-top:1px solid var(--border);padding:2rem 5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;position:relative;z-index:1}
+footer p{font-size:0.78rem;color:var(--muted)}
+.footer-brand{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;background:linear-gradient(135deg,var(--blue),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.4)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes floatWa{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes waPulse{0%{transform:scale(1);opacity:0.8}100%{transform:scale(2);opacity:0}}
+@keyframes counterUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:1024px){
+  .hero{flex-direction:column;padding:7rem 2rem 2rem}
+  .hero-photo{position:relative;right:auto;top:auto;transform:none;margin-top:3rem}
+  nav{padding:1rem 2rem}
+  .nav-links{display:none}
+  section{padding:5rem 2rem}
+  .about-grid,.contact-wrapper{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .exp-bullets{grid-template-columns:1fr}
+  .skills-showcase{grid-template-columns:1fr}
+  footer{padding:2rem}
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- CANVAS -->
+<canvas id="particleCanvas"></canvas>
+
+<!-- SCROLL PROGRESS -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- FLOATING WHATSAPP -->
+<div class="float-wa">
+  <div class="float-wa-pulse"></div>
+  <a class="float-wa-btn" href="https://wa.me/917760206506?text=Hi%20Shashank!%20I%20found%20your%20portfolio%20and%20would%20love%20to%20connect." target="_blank">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+  <div class="float-wa-label">Chat on WhatsApp</div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">SGM</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#experience">Experience</a>
+    <a href="#skills">Skills</a>
+    <a href="#awards">Awards</a>
+    <a href="#contact">Contact</a>
+    <a href="https://wa.me/917760206506" target="_blank" class="nav-whatsapp">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      WhatsApp
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-content">
+    <div class="hero-badge"><span></span>Open to Opportunities · Bangalore</div>
+    <h1>Shashank<br><span class="gradient">G M</span></h1>
+    <div class="hero-typed">
+      <span class="typed-text" id="typedText"></span><span class="cursor-blink">|</span>
+    </div>
+    <p class="hero-desc">Procurement professional with 2+ years driving operational excellence at Wipro & Infosys — specializing in contract lifecycle, SAP MM, and supplier strategy.</p>
+    <div class="hero-actions">
+      <a href="https://wa.me/917760206506?text=Hi%20Shashank!%20I%20viewed%20your%20portfolio%20and%20would%20like%20to%20connect." target="_blank" class="btn-glow">💬 Message on WhatsApp</a>
+      <a href="#experience" class="btn-ghost">View Experience →</a>
+    </div>
+  </div>
+  <div class="hero-photo">
+    <div class="photo-frame">
+      <div class="ring"></div>
+      <div class="ring2"></div>
+      <div class="photo-inner" id="photoInner" onclick="document.getElementById('photoUpload').click()" title="Click to upload your photo">
+        <img id="profileImg" src="" alt="Shashank GM"/>
+        <div class="photo-placeholder" id="photoPlaceholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <p>Your Photo Here</p>
+          <span>Click to Upload</span>
+        </div>
+      </div>
+    </div>
+    <div class="photo-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <input type="file" id="photoUpload" accept="image/*"/>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat-item"><div class="stat-num" data-count="2">0</div><div class="stat-label">Years Experience</div></div>
+  <div class="stat-item"><div class="stat-num" data-count="100">0</div><div class="stat-label">% Go-Live Accuracy</div></div>
+  <div class="stat-item"><div class="stat-num" data-count="2">0</div><div class="stat-label">Top Companies</div></div>
+  <div class="stat-item"><div class="stat-num" data-count="8">0</div><div class="stat-label">Awards Received</div></div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-eyebrow">Professional Profile</div>
+  <h2 class="section-title">Built on <span>Precision</span><br>& Operational Excellence</h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>I am a <strong>Procurement Professional</strong> with over 2 years of hands-on experience in end-to-end procurement operations, contract lifecycle management, and strategic supplier relations.</p>
+      <p>My journey spans two industry leaders — <strong>Wipro Limited</strong> and <strong>Infosys BPM</strong> — where I've led Go-Live transitions with 100% accuracy, authored comprehensive SOPs, and designed advanced Excel dashboards that power data-driven decisions.</p>
+      <p>I bring together a <strong>BCA academic foundation</strong> with deep expertise in platforms like COUPA, SAP MM, and HighQ — enabling me to bridge the gap between technology and operational efficiency.</p>
+      <p>Whether it's resolving invoice discrepancies, onboarding new vendors, or negotiating commercial terms — I thrive on bringing <strong>structure and clarity</strong> to complex procurement ecosystems.</p>
+    </div>
+    <div class="skills-panel">
+      <h3>Core Proficiency</h3>
+      <div class="skill-bar-item"><div class="skill-bar-top"><span class="skill-bar-name">COUPA / SAP MM</span><span class="skill-bar-pct">92%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-width="92"></div></div></div>
+      <div class="skill-bar-item"><div class="skill-bar-top"><span class="skill-bar-name">Contract Management</span><span class="skill-bar-pct">88%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-width="88"></div></div></div>
+      <div class="skill-bar-item"><div class="skill-bar-top"><span class="skill-bar-name">Vendor Negotiation</span><span class="skill-bar-pct">85%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-width="85"></div></div></div>
+      <div class="skill-bar-item"><div class="skill-bar-top"><span class="skill-bar-name">Advanced Excel</span><span class="skill-bar-pct">90%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-width="90"></div></div></div>
+      <div class="skill-bar-item"><div class="skill-bar-top"><span class="skill-bar-name">SLA Management</span><span class="skill-bar-pct">87%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-width="87"></div></div></div>
+      <div class="skill-bar-item"><div class="skill-bar-top"><span class="skill-bar-name">Process Documentation</span><span class="skill-bar-pct">93%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-width="93"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-eyebrow">Career Timeline</div>
+  <h2 class="section-title">Professional <span>Experience</span></h2>
+  <div class="exp-list">
+
+    <div class="exp-card">
+      <div class="exp-card-header">
+        <div class="exp-company-info">
+          <div class="company-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Wipro_Primary_Logo_Color_RGB.svg/1200px-Wipro_Primary_Logo_Color_RGB.svg.png" alt="Wipro" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=\'font-size:1.1rem;font-weight:700;color:#0071c5;font-family:Syne,sans-serif\'>W</span>'"/>
+          </div>
+          <div>
+            <div class="exp-company">Wipro Limited</div>
+            <div class="exp-role">Senior Officer</div>
+          </div>
+        </div>
+        <div class="exp-period">Jan 2025 – Present</div>
+      </div>
+      <div class="exp-tags">
+        <span class="exp-tag">COUPA</span><span class="exp-tag">HighQ</span><span class="exp-tag">Contract Mgmt</span><span class="exp-tag">SOPs</span><span class="exp-tag">Excel Dashboards</span>
+      </div>
+      <ul class="exp-bullets">
+        <li><strong>Project Go-Live</strong>Spearheaded key procurement project with 100% accuracy during Go-Live phase.</li>
+        <li><strong>Process Standardization</strong>Authored SOPs to streamline procurement workflows across teams.</li>
+        <li><strong>Contract Lifecycle</strong>Managed legal documents in HighQ for full client visibility.</li>
+        <li><strong>Renewal Coordination</strong>Proactively followed up with suppliers on contract renewals.</li>
+        <li><strong>PR Automation</strong>Used COUPA to automate purchase requisition approval processes.</li>
+        <li><strong>Strategic Dashboards</strong>Built Excel dashboards for category management & decisions.</li>
+        <li><strong>Financial Integrity</strong>Led reconciliation reports and resolved AP invoice discrepancies.</li>
+        <li><strong>Vendor Onboarding</strong>Onboarded new vendors with full compliance from day one.</li>
+      </ul>
+    </div>
+
+    <div class="exp-card">
+      <div class="exp-card-header">
+        <div class="exp-company-info">
+          <div class="company-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Infosys_logo.svg/1280px-Infosys_logo.svg.png" alt="Infosys" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=\'font-size:0.9rem;font-weight:700;color:#007cc3;font-family:Syne,sans-serif\'>INFY</span>'"/>
+          </div>
+          <div>
+            <div class="exp-company">Infosys BPM</div>
+            <div class="exp-role">Senior Process Executive</div>
+          </div>
+        </div>
+        <div class="exp-period">Mar 2023 – Dec 2024</div>
+      </div>
+      <div class="exp-tags">
+        <span class="exp-tag">SAP MM</span><span class="exp-tag">EDI</span><span class="exp-tag">3-Way Match</span><span class="exp-tag">Vendor Eval</span><span class="exp-tag">SLA Tracking</span>
+      </div>
+      <ul class="exp-bullets">
+        <li><strong>End-to-End Orders</strong>Processed high volumes of PRs to POs via SAP MM, EDI, and email.</li>
+        <li><strong>Direct & Indirect</strong>Procured materials across diverse categories for all operations.</li>
+        <li><strong>Vendor Evaluation</strong>Obtained and evaluated quotes to ensure competitive terms.</li>
+        <li><strong>Lead Time Mgmt</strong>Negotiated terms and achieved 100% quality & quantity compliance.</li>
+        <li><strong>3-Way Match</strong>Validated invoice blocks via PO, Invoice & Packing List reconciliation.</li>
+        <li><strong>SLA Tracking</strong>Monitored supplier KPIs and managed escalations and cancellations.</li>
+        <li><strong>Problem Resolution</strong>Primary contact resolving logistical bottlenecks with providers.</li>
+        <li><strong>Data Integrity</strong>Maintained high ERP data accuracy for real-time reporting needs.</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-eyebrow">Technical Arsenal</div>
+  <h2 class="section-title">Skills & <span>Toolkit</span></h2>
+  <div class="skills-showcase">
+    <div class="skill-cat">
+      <div class="skill-cat-icon">⚙️</div>
+      <div class="skill-cat-title">Procurement Platforms</div>
+      <div class="skill-pills">
+        <span class="skill-pill">COUPA</span><span class="skill-pill">SAP MM</span><span class="skill-pill">SAP SRM</span><span class="skill-pill">Oracle</span><span class="skill-pill">EDI</span>
+      </div>
+    </div>
+    <div class="skill-cat">
+      <div class="skill-cat-icon">🛠️</div>
+      <div class="skill-cat-title">Management Tools</div>
+      <div class="skill-pills">
+        <span class="skill-pill">HighQ</span><span class="skill-pill">Advanced Excel</span><span class="skill-pill">G Suite</span><span class="skill-pill">MS Office</span>
+      </div>
+    </div>
+    <div class="skill-cat">
+      <div class="skill-cat-icon">🎯</div>
+      <div class="skill-cat-title">Core Competencies</div>
+      <div class="skill-pills">
+        <span class="skill-pill">Contract Lifecycle</span><span class="skill-pill">Vendor Onboarding</span><span class="skill-pill">Cost Analysis</span><span class="skill-pill">SLA Mgmt</span><span class="skill-pill">3-Way Match</span><span class="skill-pill">Stakeholder Mgmt</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AWARDS -->
+<section id="awards">
+  <div class="section-eyebrow">Recognition</div>
+  <h2 class="section-title">Awards & <span>Achievements</span></h2>
+  <div class="awards-grid">
+    <div class="award-card"><span class="award-emoji">🏆</span><div class="award-company">Wipro</div><div class="award-name">Building Trust Award</div></div>
+    <div class="award-card"><span class="award-emoji">⚡</span><div class="award-company">Wipro</div><div class="award-name">Being Responsive Award</div></div>
+    <div class="award-card"><span class="award-emoji">🎯</span><div class="award-company">Wipro</div><div class="award-name">Demonstrating Stewardship</div></div>
+    <div class="award-card"><span class="award-emoji">🥇</span><div class="award-company">Wipro</div><div class="award-name">Victory League Award</div></div>
+    <div class="award-card"><span class="award-emoji">🌟</span><div class="award-company">Infosys BPM</div><div class="award-name">Quarterly Spot Award</div></div>
+    <div class="award-card"><span class="award-emoji">🚀</span><div class="award-company">Infosys BPM</div><div class="award-name">Rising Star Award</div></div>
+    <div class="award-card"><span class="award-emoji">💪</span><div class="award-company">Infosys BPM</div><div class="award-name">Extra Miler Award</div></div>
+    <div class="award-card"><span class="award-emoji">📜</span><div class="award-company">Certification</div><div class="award-name">Lean Accelerator — Leading Project & Participation</div></div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-eyebrow">Academic Background</div>
+  <h2 class="section-title">Education</h2>
+  <div class="edu-card">
+    <div class="edu-icon-wrap">🎓</div>
+    <div>
+      <div class="edu-degree">Bachelor of Computer Applications</div>
+      <div class="edu-school">JSS College of Arts, Commerce and Science</div>
+      <div class="edu-year">2019 – 2022</div>
+      <div class="edu-langs">
+        <span class="edu-lang">English</span>
+        <span class="edu-lang">Tamil</span>
+        <span class="edu-lang">Kannada</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-eyebrow">Let's Connect</div>
+  <h2 class="section-title">Get In <span>Touch</span></h2>
+  <div class="contact-wrapper">
+    <div>
+      <p class="contact-headline">Open to <em>new opportunities</em>, collaborations, and conversations about <em>procurement excellence.</em></p>
+      <p style="color:var(--muted);font-size:0.9rem;line-height:1.8">Whether you have a role, a project, or just want to talk shop about procurement — my inbox and WhatsApp are always open.</p>
+    </div>
+    <div class="contact-cards">
+      <a href="https://wa.me/917760206506?text=Hi%20Shashank!" target="_blank" class="contact-card whatsapp-card">
+        <div class="cc-icon">💬</div>
+        <div><div class="cc-label">WhatsApp</div><div class="cc-value">+91 7760206506</div></div>
+      </a>
+      <a href="mailto:shashankgm866@gmail.com" class="contact-card">
+        <div class="cc-icon">✉️</div>
+        <div><div class="cc-label">Email</div><div class="cc-value">shashankgm866@gmail.com</div></div>
+      </a>
+      <a href="https://linkedin.com/in/shashank-g-m-5a377321a" target="_blank" class="contact-card">
+        <div class="cc-icon">💼</div>
+        <div><div class="cc-label">LinkedIn</div><div class="cc-value">linkedin.com/in/shashank-g-m</div></div>
+      </a>
+      <div class="contact-card" style="cursor:default">
+        <div class="cc-icon">📍</div>
+        <div><div class="cc-label">Location</div><div class="cc-value">Electronic City, Bangalore</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Shashank G M</div>
+  <p>Procurement Professional · Bangalore · DOB: 14 June 2001</p>
+  <p>© 2025 All rights reserved</p>
+</footer>
+
+<script>
+// ── CUSTOM CURSOR ──
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px'});
+function animateRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animateRing)}
+animateRing();
+document.querySelectorAll('a,button,.exp-card,.award-card,.contact-card,.photo-inner').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.style.transform='translate(-50%,-50%) scale(2)';ring.style.transform='translate(-50%,-50%) scale(1.5)';ring.style.borderColor='rgba(0,200,255,0.8)'});
+  el.addEventListener('mouseleave',()=>{cursor.style.transform='translate(-50%,-50%) scale(1)';ring.style.transform='translate(-50%,-50%) scale(1)';ring.style.borderColor='rgba(0,200,255,0.5)'});
+});
+
+// ── PARTICLE CANVAS ──
+const canvas=document.getElementById('particleCanvas');
+const ctx=canvas.getContext('2d');
+canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight});
+const particles=[];
+for(let i=0;i<80;i++){
+  particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-.5)*0.4,vy:(Math.random()-.5)*0.4,r:Math.random()*1.5+0.3,alpha:Math.random()*0.5+0.1});
+}
+function drawParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0||p.x>canvas.width)p.vx*=-1;
+    if(p.y<0||p.y>canvas.height)p.vy*=-1;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(0,200,255,${p.alpha})`;ctx.fill();
+  });
+  particles.forEach((a,i)=>{particles.slice(i+1).forEach(b=>{
+    const dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);
+    if(d<120){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=`rgba(0,200,255,${0.06*(1-d/120)})`;ctx.lineWidth=0.5;ctx.stroke()}
+  })});
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// ── TYPING ANIMATION ──
+const phrases=['Senior Procurement Officer','Contract Lifecycle Expert','SAP MM Specialist','Process Excellence Champion'];
+let pi=0,ci=0,deleting=false;
+const typedEl=document.getElementById('typedText');
+function typeLoop(){
+  const phrase=phrases[pi];
+  if(!deleting&&ci<=phrase.length){typedEl.textContent=phrase.slice(0,ci++);setTimeout(typeLoop,80)}
+  else if(!deleting&&ci>phrase.length){deleting=true;setTimeout(typeLoop,1800)}
+  else if(deleting&&ci>0){typedEl.textContent=phrase.slice(0,ci--);setTimeout(typeLoop,40)}
+  else{deleting=false;pi=(pi+1)%phrases.length;setTimeout(typeLoop,400)}
+}
+typeLoop();
+
+// ── SCROLL PROGRESS ──
+window.addEventListener('scroll',()=>{
+  const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('scrollProgress').style.width=pct+'%';
+});
+
+// ── COUNTER ANIMATION ──
+function animateCounter(el,target,suffix=''){
+  let start=0;const dur=1800;const startTime=performance.now();
+  function step(now){
+    const p=Math.min((now-startTime)/dur,1);
+    const val=Math.floor(p*target);
+    el.textContent=val+(suffix||'');
+    if(p<1)requestAnimationFrame(step);else el.textContent=target+(suffix||'');
+  }
+  requestAnimationFrame(step);
+}
+const counterObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){
+    const el=e.target,target=parseInt(el.dataset.count);
+    animateCounter(el,target);counterObs.unobserve(el);
+  }});
+},{threshold:0.5});
+document.querySelectorAll('.stat-num[data-count]').forEach(el=>counterObs.observe(el));
+
+// ── SKILL BARS ──
+const barObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){
+    const w=e.target.dataset.width;setTimeout(()=>e.target.style.width=w+'%',200);
+    barObs.unobserve(e.target);
+  }});
+},{threshold:0.3});
+document.querySelectorAll('.skill-bar-fill').forEach(b=>barObs.observe(b));
+
+// ── SCROLL REVEAL ──
+const revObs=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*120);revObs.unobserve(e.target)}});
+},{threshold:0.1});
+document.querySelectorAll('.exp-card,.award-card').forEach(el=>revObs.observe(el));
+
+// ── PHOTO UPLOAD ──
+document.getElementById('photoUpload').addEventListener('change',function(){
+  const file=this.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const img=document.getElementById('profileImg');
+    img.src=e.target.result;img.style.display='block';
+    document.getElementById('photoPlaceholder').style.display='none';
+  };
+  reader.readAsDataURL(file);
+});
+
+// ── NAV ACTIVE ──
+const sections=document.querySelectorAll('section[id]');
+const navLinks=document.querySelectorAll('.nav-links a:not(.nav-whatsapp)');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  sections.forEach(s=>{if(window.scrollY>=s.offsetTop-140)cur=s.id});
+  navLinks.forEach(a=>{
+    const active=a.getAttribute('href')==='#'+cur;
+    a.style.color=active?'var(--blue)':'';
+  });
+});
+</script>
+</body>
+</html>
